@@ -5,7 +5,6 @@ import 'package:quiz/presentation/style/colors.dart';
 
 import '../domain/entity/question_entity.dart';
 
-
 class QuestionPage extends StatefulWidget {
   const QuestionPage({Key? key, required this.title}) : super(key: key);
 
@@ -20,17 +19,16 @@ class _QuestionPageState extends State<QuestionPage> {
   final QuestionBloc _questionBloc = QuestionBloc();
   List<QuestionEntity> _questions = [];
 
-
   void _goToNextQuestion() {
-    if(_index >= _questions.length-1) return;
+    if (_index >= _questions.length - 1) return;
     setState(() {
       _index++;
     });
   }
 
-  void _answerQuestion(String userAnswer) {
-    if(_questions[_index].correctAnswer != userAnswer) return;
-    _goToNextQuestion();
+  void _answerQuestion(String userAnswer) async {
+    if (_questions[_index].correctAnswer != userAnswer) return;
+    await Future.delayed(const Duration(milliseconds: 1500), _goToNextQuestion);
   }
 
   @override
@@ -39,18 +37,18 @@ class _QuestionPageState extends State<QuestionPage> {
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [backgroundTopColor, backgroundBottomColor],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight
-          )
-        ),
+            gradient: LinearGradient(
+                colors: [backgroundTopColor, backgroundBottomColor],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight)),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: FutureBuilder<List<QuestionEntity>>(
             future: _questionBloc.getQuestions(),
-            builder: (BuildContext context, AsyncSnapshot<List<QuestionEntity>> snapshot) {
-              if(snapshot.connectionState != ConnectionState.done || snapshot.data == null) {
+            builder: (BuildContext context,
+                AsyncSnapshot<List<QuestionEntity>> snapshot) {
+              if (snapshot.connectionState != ConnectionState.done ||
+                  snapshot.data == null) {
                 return const Center(child: CircularProgressIndicator());
               }
               _questions = snapshot.data!;
@@ -58,25 +56,32 @@ class _QuestionPageState extends State<QuestionPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(child:
-                  Image.asset("assets/images/quiz_image.png",
+                  Expanded(
+                      child: Image.asset(
+                    "assets/images/quiz_image.png",
                     scale: 0.5,
                   )),
-                  Text("question ${_index+1} of ${_questions.length}",
+                  Text(
+                    "question ${_index + 1} of ${_questions.length}",
                     style: const TextStyle(
                       fontSize: 18,
                       color: questionIndexColor,
                     ),
                   ),
-                  const SizedBox(height: 20,),
-                  Text(_questions[_index].text!,
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    _questions[_index].text!,
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
                       color: questionColor,
                     ),
                   ),
-                  const SizedBox(height: 50,),
+                  const SizedBox(
+                    height: 50,
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: _questions[_index].answers!.map((answer) {
@@ -85,10 +90,11 @@ class _QuestionPageState extends State<QuestionPage> {
                         isCorrect: _questions[_index].correctAnswer == answer,
                         onPressed: () => _answerQuestion(answer),
                       );
-                    }
-                    ).toList(),
+                    }).toList(),
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(
+                    height: 20,
+                  ),
                 ],
               );
             },

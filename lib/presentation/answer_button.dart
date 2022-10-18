@@ -44,9 +44,7 @@ class _AnswerButtonState extends State<AnswerButton> {
               setState(() {
                 hasBeenPressed = true;
               });
-              Future.delayed(const Duration(milliseconds: 1500), () {
-                widget.onPressed();
-              });
+              widget.onPressed();
             },
             child: Text(
               widget.answer,
