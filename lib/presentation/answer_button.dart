@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:quiz/presentation/style/colors.dart';
 
-class AnswerButton extends StatelessWidget {
-
+class AnswerButton extends StatefulWidget {
   final String answer;
+  final bool isCorrect;
   final VoidCallback onPressed;
-  const AnswerButton({Key? key, required this.answer, required this.onPressed}) : super(key: key);
+
+  const AnswerButton(
+      {Key? key,
+      required this.answer,
+      required this.isCorrect,
+      required this.onPressed})
+      : super(key: key);
+
+  @override
+  State<AnswerButton> createState() => _AnswerButtonState();
+}
+
+class _AnswerButtonState extends State<AnswerButton> {
+  bool hasBeenPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,17 +32,26 @@ class AnswerButton extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
-              primary: answerButtonColor,
-              onPrimary:answerButtonTextColor,
+              primary: hasBeenPressed
+                  ? (widget.isCorrect
+                      ? answerButtonColorCorrect
+                      : answerButtonColorWrong)
+                  : answerButtonColor,
+              onPrimary: answerButtonTextColor,
               elevation: 10,
             ),
-            onPressed: onPressed,
-            child: Text(answer,
-              style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600
-              ),)
-        ),
+            onPressed: () {
+              setState(() {
+                hasBeenPressed = true;
+              });
+              Future.delayed(const Duration(milliseconds: 1500), () {
+                widget.onPressed();
+              });
+            },
+            child: Text(
+              widget.answer,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            )),
       ),
     );
   }

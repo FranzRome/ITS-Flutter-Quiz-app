@@ -82,6 +82,7 @@ class _QuestionPageState extends State<QuestionPage> {
                     children: _questions[_index].answers!.map((answer) {
                       return AnswerButton(
                         answer: answer,
+                        isCorrect: _questions[_index].correctAnswer == answer,
                         onPressed: () => _answerQuestion(answer),
                       );
                     }
