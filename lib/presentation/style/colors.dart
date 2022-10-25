@@ -9,3 +9,6 @@ const answerButtonColor = Color(0xFFFFFFFF);
 const answerButtonColorCorrect = Color(0xFF00CC00);
 const answerButtonColorWrong = Color(0xFFBD0000);
 const answerButtonTextColor = Color.fromARGB(255, 52, 84, 223);
+const answerButtonColorRight = Color(0xFF55FF55);
+const answerButtonColorWrong = Color(0xFFFF5555);
+const answeredButtonTextColor = Color(0xFFFFFFFF);
